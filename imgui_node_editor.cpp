@@ -1185,14 +1185,15 @@ void ed::EditorContext::Begin(const char* id, const ImVec2& size)
         m_NavigateAction.FinishNavigation();
 
         auto currentVisibleRect = m_Canvas.ViewRect();
-        auto currentAspectRatio = currentVisibleRect.GetHeight() ? (currentVisibleRect.GetWidth() / currentVisibleRect.GetHeight()) : 0.0f;
-
+        auto width   = currentVisibleRect.GetWidth();
+        auto height  = currentVisibleRect.GetHeight();
         auto centerX = (previousVisibleRect.Max.x + previousVisibleRect.Min.x) * 0.5f;
-        auto height  = previousVisibleRect.GetHeight();
-        auto width   = currentAspectRatio * height;
+        auto centerY = (previousVisibleRect.Max.y + previousVisibleRect.Min.y) * 0.5f;
 
         previousVisibleRect.Min.x = centerX - 0.5f * width;
-        previousVisibleRect.Max.x = centerX + 0.5f * width;
+        previousVisibleRect.Min.y = centerY - 0.5f * height;
+        previousVisibleRect.Max.x = previousVisibleRect.Min.x + width;
+        previousVisibleRect.Max.y = previousVisibleRect.Min.y + height;
 
         m_NavigateAction.NavigateTo(previousVisibleRect, Detail::NavigateAction::ZoomMode::Exact, 0.0f);
     }
